@@ -1,7 +1,7 @@
 package com.homo.game.persistent.test;
 
 import com.homo.core.facade.storege.dirty.DirtyDriver;
-import com.homo.core.facade.storege.landing.DBDataHolder;
+import com.homo.core.facade.storege.landing.LandingDriver;
 import com.homo.game.persistent.PersistentApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class PersistentTest {
     @Autowired
     DirtyDriver dirtyDriver;
     @Autowired
-    DBDataHolder dbDataHolder;
+    LandingDriver dbDataHolder;
     @Test
     public void start() throws InterruptedException {
         Thread.currentThread().join();

@@ -51,7 +51,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>homoBuild</goal>
+                            <!--                            <goal>homoBuild</goal>-->
                             <goal>homoClean</goal>
                         </goals>
                     </execution>

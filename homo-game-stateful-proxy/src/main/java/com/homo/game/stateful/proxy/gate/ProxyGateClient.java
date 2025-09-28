@@ -16,9 +16,10 @@ import com.homo.game.stateful.proxy.StatefulProxyService;
 import com.homo.game.stateful.proxy.config.StatefulProxyProperties;
 import com.homo.game.stateful.proxy.pojo.CacheMsg;
 import io.homo.proto.client.*;
-import javafx.util.Pair;
+
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import reactor.util.function.Tuple2;
 
 import java.util.List;
 
@@ -138,12 +139,12 @@ public class ProxyGateClient extends DefaultGateClient implements CallQueueProdu
         int clientCount = syncInfo.getCount();
         log.info("transfer uid {} fromPodId {} cacheStartReq {} clientConfirmSeq {} clientCount {}", uid, fromPodId, cacheStartReq, clientConfirmSeq, clientCount);
         if (state == State.LOGIN || state == State.RECONNECTED || state == State.INACTIVE) {
-            Pair<Boolean, List<CacheMsg>> transferMsg = reconnectBox.transfer(clientConfirmSeq, cacheStartReq, clientCount);
-            if (!transferMsg.getKey().equals(true)) {
+            Tuple2<Boolean, List<CacheMsg>> transferMsg = reconnectBox.transfer(clientConfirmSeq, cacheStartReq, clientCount);
+            if (!transferMsg.getT1().equals(true)) {
                 return TransferCacheResp.newBuilder().build();
             }
             TransferCacheResp.Builder newBuilder = TransferCacheResp.newBuilder();
-            for (CacheMsg cacheMsg : transferMsg.getValue()) {
+            for (CacheMsg cacheMsg : transferMsg.getT2()) {
                 //重构消息
                 TransferCacheResp.SyncMsg syncMsg = TransferCacheResp.SyncMsg
                         .newBuilder()

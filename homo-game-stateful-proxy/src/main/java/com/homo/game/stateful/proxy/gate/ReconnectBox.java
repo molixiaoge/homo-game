@@ -4,11 +4,13 @@ import com.homo.core.facade.gate.GateMessageHeader;
 import com.homo.core.utils.spring.GetBeanUtil;
 import com.homo.game.stateful.proxy.pojo.CacheMsg;
 import io.homo.proto.client.TransferCacheResp;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.springframework.util.Assert;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,10 @@ public class ReconnectBox {
     }
 
     //cache info Pair<当前缓存开始序列号,已缓存个数(0代表left val为下一个缓存序号)>
-    public Pair<Short, Short> currentReconnectInfo() {
+    public Tuple2<Short, Short> currentReconnectInfo() {
         Short beginCache = getCurrentSendSeq();
         Short count = new Integer(getSize()).shortValue();
-        return new Pair<>(beginCache, count);
+        return Tuples.of(beginCache, count);
     }
 
     public Short getCurrentSendSeq() {
@@ -74,7 +76,7 @@ public class ReconnectBox {
         return true;
     }
 
-    public Pair<Boolean, List<CacheMsg>> transfer(Integer clientCacheSendReq, Integer clientConfirmInnerSeq, Integer count) {
+    public Tuple2<Boolean, List<CacheMsg>> transfer(Integer clientCacheSendReq, Integer clientConfirmInnerSeq, Integer count) {
         Short clientCacheStartReqShort = clientCacheSendReq.shortValue();
         Short clientConfirmSeqShort = clientConfirmInnerSeq.shortValue();
         trimCache(clientConfirmSeqShort);//先清空已读的消息
@@ -89,7 +91,7 @@ public class ReconnectBox {
         if ( inCache) {
             allCacheMsg = getAllCacheMsg();
         }
-        return new Pair<>(inCache, allCacheMsg);
+        return Tuples.of(inCache, allCacheMsg);
     }
 
     public List<CacheMsg> getAllCacheMsg() {
